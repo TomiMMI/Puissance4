@@ -1,16 +1,18 @@
 #pragma once
 
 #include <vector>
-class Game
+class Plateau
 {
 public:
 	enum cases { Vide, Jaune, Rouge };
 	std::vector<std::vector<cases>> tableau;
 
-	Game();
+	Plateau();
 	void afficheJeu();
-	void jouer(int, int, int);
-	void tourPossibles();
+	void jouer(cases&,bool);
+	std::vector<cases*> tourPossible();
+	cases* celPossible(int);
+	bool isEnded();
 
 
 };
