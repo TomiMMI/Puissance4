@@ -3,10 +3,19 @@
 #include <vector>
 #include <map>
 #include <cstdlib>
+#include <sstream>
 
 Plateau::Plateau(std::string J1, std::string J2){
 	tableau = std::vector<std::vector<cases>>(6, std::vector<cases>(7, Vide));
-	int indextab = rand() % 1;
+
+	//Seedage pour fonction rand() afin d'avoir un joueur aléatoire qui débutes
+	const void* adressePourSeed = static_cast<const void*>(this);
+	std::stringstream seed;
+	seed << adressePourSeed;
+	srand(atoi(seed.str().c_str()));
+	int indextab = rand() % 2;
+
+
 	joueurs[indextab] = J1;
 	joueurs[!indextab] = J2;
 }

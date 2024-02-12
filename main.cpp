@@ -26,6 +26,8 @@ int main() {
 			break;
 		case 1 :
 			std::cout << "\n\nVictoire de " << jeu->getJoueur(joueurActuel) << " !\n\n";
+			jeu->afficheJeu();
+			jeu->afficheJoueurs();
 			jeu->toggleActive();
 			break;
 		case 2 :
