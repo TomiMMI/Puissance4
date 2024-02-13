@@ -6,7 +6,7 @@
 #include <sstream>
 
 Plateau::Plateau(std::string J1, std::string J2){
-	tableau = std::vector<std::vector<cases>>(6, std::vector<cases>(7, Vide));
+	tableau = std::vector<std::vector<cases>>(6, std::vector<cases>(7, Rouge));
 
 	//Seedage pour fonction rand() afin d'avoir un joueur aléatoire qui débutes
 	const void* adressePourSeed = static_cast<const void*>(this);
@@ -20,7 +20,7 @@ Plateau::Plateau(std::string J1, std::string J2){
 	joueurs[!indextab] = J2;
 }
 void Plateau::afficheJeu() const{
-	for (auto line : tableau) {
+	for (std::vector<cases> line : tableau) {
 		for (auto cel : line) {
 			switch (cel) {
 				case(Vide) :

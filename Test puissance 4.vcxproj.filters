@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\ShaderFiles">
+      <UniqueIdentifier>{399f7da0-d972-4cde-b29d-10133141ea33}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Plateau.cpp">
@@ -21,10 +24,36 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="testconnect4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Plateau.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="vertexPlateau.vs">
+      <Filter>Header Files\ShaderFiles</Filter>
+    </None>
+    <None Include="fragmentPlateau.fs">
+      <Filter>Header Files\ShaderFiles</Filter>
+    </None>
+    <None Include="fragmentJetons.fs">
+      <Filter>Header Files\ShaderFiles</Filter>
+    </None>
+    <None Include="vertexJetons.vs">
+      <Filter>Header Files\ShaderFiles</Filter>
+    </None>
   </ItemGroup>
 </Project>

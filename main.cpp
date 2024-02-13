@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 
-int main() {
+int arefaire() {
 	std::string J1, J2;
 	std::cout << "--------------------------------------------------   Puissance 4   --------------------------------------------------\n\n";
 	std::cout << "Entrez le nom du joueur 1 : ";
@@ -37,5 +37,5 @@ int main() {
 		}
 		joueurActuel = !joueurActuel;
 	}
-	
+	return 1;
 }
