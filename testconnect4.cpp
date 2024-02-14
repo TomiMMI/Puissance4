@@ -38,6 +38,7 @@ int main()
             positions.push_back(glm::vec3(-0.7 + (i * 0.3733f)*ratio + 0.07,-0.9 + j * 0.31 + 0.125, 0.0f));
         }
     }
+    int GROSCON = 0;
 
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -47,6 +48,7 @@ int main()
 
 
     GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Puissance 4", NULL, NULL);
+
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -74,7 +76,7 @@ int main()
         2, 3, 1
 
     };
-    int numberOfPointsInCircle = 100;
+    int numberOfPointsInCircle = 128;
     std::vector<float> cercleVertices = drawCircle(0, 0.0, 0.125, numberOfPointsInCircle);
     std::vector<int> cercleIndices = generateEBOforCircle(numberOfPointsInCircle);
 
@@ -115,13 +117,16 @@ int main()
     Shader shaderPlateau("vertexPlateau.vs", "fragmentPlateau.fs");
     Shader shaderJetons("vertexJetons.vs", "fragmentJetons.fs");
 
+    std::string J1, J2;
+    std::cout << "--------------------------------------------------   Puissance 4   --------------------------------------------------\n\n";
+    std::cout << "Entrez le nom du joueur 1 : ";
+    std::cin >> J1;
+    std::cout << "\nEntrez le nom du joueur 2 : ";
+    std::cin >> J2;
+    std::cout << "\n\n";
 
-    while (!glfwWindowShouldClose(window))
-    {
-        float currentFrame = static_cast<float>(glfwGetTime());
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
-
+    Plateau* jeu = new Plateau(J1, J2);
+    while (jeu->getActive()) {
         glClearColor(1.f, 1.f, 1.f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -129,20 +134,55 @@ int main()
         shaderPlateau.use();
         glBindVertexArray(VAOplateau);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        static int joueurActuel = 0;
+        jeu->afficheJeu();
+        jeu->afficheJoueurs();
+        std::cout << "C'est au tour de " << jeu->getJoueur(joueurActuel) << ". Dans quelle colonne voulez vous jouer ? : ";
+        int choix;
+        do {
+            std::cin >> choix;
+        } while (!jeu->tour(choix, joueurActuel));
+        //while (!glfwWindowShouldClose(window))
+        {
 
-        shaderJetons.use();
-        glBindVertexArray(VAOjetons);
-        for (int i = 0; i < jeu->tableau.size(); i++) {
-            for (int j = 0; j < jeu->tableau[i].size(); j++) {
-                shaderJetons.setInt("couleur", int(jeu->tableau[i][j]));
-                shaderJetons.setVec4("trans", positions[i + j * 6].x, positions[i + j * 6].y, positions[i + j * 6].z, 0.0f);
-                glDrawElements(GL_TRIANGLES, cercleIndices.size(), GL_UNSIGNED_INT, 0);
+            glClearColor(1.f, 1.f, 1.f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+            shaderPlateau.use();
+            glBindVertexArray(VAOplateau);
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+            shaderJetons.use();
+            glBindVertexArray(VAOjetons);
+            for (int i = 0; i < jeu->tableau.size(); i++) {
+                for (int j = 0; j < jeu->tableau[0].size(); j++) {
+                    shaderJetons.setInt("couleur", int(jeu->tableau[jeu->tableau.size()-i-1][j]));
+                    shaderJetons.setVec4("trans", positions[i * 7 + j].x, positions[i * 7 + j].y, positions[i * 7 + j].z, 0.0f);
+                    glDrawElements(GL_TRIANGLES, cercleIndices.size(), GL_UNSIGNED_INT, 0);
+                }
             }
-        }
 
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+            glfwSwapBuffers(window);
+            glfwPollEvents();
+        }
+        switch (jeu->jeuFini()) {
+        case 0:
+            break;
+        case 1:
+            std::cout << "\n\nVictoire de " << jeu->getJoueur(joueurActuel) << " !\n\n";
+            jeu->afficheJeu();
+            jeu->afficheJoueurs();
+            jeu->toggleActive();
+            break;
+        case 2:
+            std::cout << "\n\n Egalite !";
+            jeu->toggleActive();
+            break;
+        }
+        joueurActuel = !joueurActuel;
     }
+    
 
     glDeleteVertexArrays(1, &VAOplateau);
     glDeleteBuffers(1, &VBOplateau);
