@@ -1,4 +1,4 @@
-﻿/*#include <glad/glad.h>
+﻿#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "Shader.h"
 #include <string>
@@ -12,6 +12,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 bool dansLePlateau();
+bool tourORDI = false;
 
 void posSouris(GLFWwindow* window, double x, double y);
 glm::vec3 xyzSouris(0.0f, 0.0f, 0.0f);
@@ -23,12 +24,11 @@ float nearZero(float valeur);
 
 std::vector<glm::vec3> positions;
 
-Plateau* jeu = new Plateau("Joueur 1","Joueur 2");
+Plateau* jeu = new Plateau("Joueur 1","ORDI");
 
  unsigned int SCR_WIDTH = 960;
 unsigned int SCR_HEIGHT = 540;
 float ratio = (float)SCR_HEIGHT / (float)SCR_WIDTH;
-int joueurActuel = 1;
 bool finPgrm = false;
 
 int main()
@@ -120,7 +120,7 @@ int main()
     Shader shaderPlateau("vertexPlateau.vs", "fragmentPlateau.fs");
     Shader shaderJetons("vertexJetons.vs", "fragmentJetons.fs");
 
-   // while (jeu->getActive()) {
+    tourORDI = jeu->getJoueur(jeu->joueurActuel) == "ORDI";
     while (jeu->getActive())
     {
 
@@ -134,8 +134,8 @@ int main()
 
         shaderJetons.use();
         glBindVertexArray(VAOjetons);
-        if (afficherJeton) {
-            shaderJetons.setInt("couleur", (joueurActuel));
+        if (!tourORDI && afficherJeton) {
+            shaderJetons.setInt("couleur", (-jeu->joueurActuel + 2));
             shaderJetons.setVec4("trans", (float(xyzSouris.x) / (SCR_WIDTH / 2)) - 1, 0.9, 0.0f, 0.0f);
             glDrawElements(GL_TRIANGLES, cercleIndices.size(), GL_UNSIGNED_INT, 0);
         }
@@ -153,7 +153,7 @@ int main()
         case 0:
             break;
         case 1:
-            std::cout << "\n\nVictoire de " << jeu->getJoueur(joueurActuel) << " !\n\n";
+            std::cout << "\n\nVictoire de " << jeu->getJoueur(jeu->joueurActuel) << " !\n\n";
             jeu->toggleActive();
             break;
 
@@ -162,6 +162,10 @@ int main()
             jeu->toggleActive();
             break;
         }
+        if (tourORDI) {
+            jeu->tourOrdi();
+            tourORDI = false;
+    }
     }
     jeu->afficheJeu();
     jeu->afficheJoueurs();
@@ -269,9 +273,10 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS && jeu->getActive()) {
         if (dansLePlateau()) {
             int colonne = xyzSouris.x / (int(((0.6 + 0.035) * SCR_WIDTH) / 7)) - 1;
-            if (jeu->tour(colonne, joueurActuel)) {
-                joueurActuel = (joueurActuel % 2) + 1;
+            if (!tourORDI && jeu->tour(colonne)) {
+                tourORDI = true;
                 jeu->afficheJeu();
+                jeu->afficheJoueurs();
             }
         }
     }
@@ -283,4 +288,4 @@ bool dansLePlateau() {
     }
     return false;
 
-}*/
+}

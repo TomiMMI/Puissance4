@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include <sstream>
 
-Plateau::Plateau(std::string J1, std::string J2){
+Plateau::Plateau(std::string J1, std::string J2) {
 	tableau = std::vector<std::vector<cases>>(6, std::vector<cases>(7, Vide));
 
 	//Seedage pour fonction rand() afin d'avoir un joueur aléatoire qui débutes
@@ -38,8 +38,8 @@ void Plateau::afficheJeu() const{
 	}
 	std::cout << "\n\n";
 }
-void Plateau::jouer(cases* cel,int joueur) {
-	if (joueur) *cel = Jaune;
+void Plateau::jouer(cases* cel) {
+	if (joueurActuel == 1) *cel = Jaune;
 	else *cel = Rouge;
 }
 std::map<int,Plateau::cases*> Plateau::tourPossible(){
@@ -47,7 +47,7 @@ std::map<int,Plateau::cases*> Plateau::tourPossible(){
 	for ( int colonne = 0; colonne < (int)tableau[0].size(); colonne++) {
 		cases* point = celPossible(colonne);
 		if (point != nullptr) {
-			possible.emplace(colonne + 1, point);
+			possible.emplace(colonne, point);
 		}
 	}
 	return possible;
@@ -105,10 +105,11 @@ int Plateau::jeuFini() {
 		//Afficher le joueur qui gagne
 		// Mettre en place une boucle de jeu pour 2j;
 }
-bool Plateau::tour(int col, int joueur) {
+bool Plateau::tour(int col) {
 	std::map<int, cases*> possible = tourPossible();
 	try {
-		jouer(possible.at(col), joueur);
+		jouer(possible.at(col-1));
+		joueurActuel = !joueurActuel;
 		return true;
 	}
 	catch (const std::out_of_range& oor) {
@@ -127,4 +128,181 @@ bool Plateau::getActive() {
 }
 void Plateau::toggleActive() {
 	active = !active;
+}
+int Plateau::heuristique() {
+	int heuristique = 0;
+	if (joueurs[joueurActuel] == "ORDI") {
+		if (this->jeuFini() == 1) {
+			heuristique -= 10000;
+		}
+			for (auto colonne = 0; colonne < tableau[0].size(); colonne++) {
+				for (auto ligne = 0; ligne < tableau.size() - 2; ligne++) {
+					if (tableau[ligne][colonne] != Vide &&
+						tableau[ligne][colonne] == tableau[ligne + 1][colonne] &&
+						tableau[ligne][colonne] == tableau[ligne + 2][colonne])
+						heuristique-= 10;
+				}
+			}
+			for (auto ligne = 0; ligne < tableau.size(); ligne++) {
+				for (auto colonne = 0; colonne < tableau[0].size() - 2; colonne++) {
+					if (tableau[ligne][colonne] != Vide &&
+						tableau[ligne][colonne] == tableau[ligne][colonne + 1] &&
+						tableau[ligne][colonne] == tableau[ligne][colonne + 2])
+						heuristique -= 10;
+				}
+			}
+			for (auto ligne = 3; ligne < tableau.size(); ligne++) {
+				for (auto colonne = 0; colonne < tableau[0].size() - 2; colonne++) {
+					if (tableau[ligne][colonne] != Vide &&
+						tableau[ligne][colonne] == tableau[ligne - 1][colonne + 1] &&
+						tableau[ligne][colonne] == tableau[ligne - 2][colonne + 2])
+						heuristique -= 10;
+				}
+			}
+			for (auto ligne = 0; ligne < tableau.size() - 3; ligne++) {
+				for (auto colonne = 0; colonne < tableau[0].size() - 2; colonne++) {
+					if (tableau[ligne][colonne] != Vide &&
+						tableau[ligne][colonne] == tableau[ligne + 1][colonne + 1] &&
+						tableau[ligne][colonne] == tableau[ligne + 2][colonne + 2])
+						heuristique -= 10;
+				}
+			}
+			return heuristique;
+	}
+	else {
+		if (this->jeuFini() == 1) {
+			heuristique += 10000;
+		}
+		else {
+			for (auto colonne = 0; colonne < tableau[0].size(); colonne++) {
+				for (auto ligne = 0; ligne < tableau.size() - 2; ligne++) {
+					if (tableau[ligne][colonne] != Vide &&
+						tableau[ligne][colonne] == tableau[ligne + 1][colonne] &&
+						tableau[ligne][colonne] == tableau[ligne + 2][colonne])
+						heuristique += 10;
+				}
+			}
+			for (auto ligne = 0; ligne < tableau.size(); ligne++) {
+				for (auto colonne = 0; colonne < tableau[0].size() - 2; colonne++) {
+					if (tableau[ligne][colonne] != Vide &&
+						tableau[ligne][colonne] == tableau[ligne][colonne + 1] &&
+						tableau[ligne][colonne] == tableau[ligne][colonne + 2])
+						heuristique += 10;
+				}
+			}
+			for (auto ligne = 3; ligne < tableau.size(); ligne++) {
+				for (auto colonne = 0; colonne < tableau[0].size() - 2; colonne++) {
+					if (tableau[ligne][colonne] != Vide &&
+						tableau[ligne][colonne] == tableau[ligne - 1][colonne + 1] &&
+						tableau[ligne][colonne] == tableau[ligne - 2][colonne + 2])
+						heuristique += 10;
+				}
+			}
+			for (auto ligne = 0; ligne < tableau.size() - 3; ligne++) {
+				for (auto colonne = 0; colonne < tableau[0].size() - 2; colonne++) {
+					if (tableau[ligne][colonne] != Vide &&
+						tableau[ligne][colonne] == tableau[ligne + 1][colonne + 1] &&
+						tableau[ligne][colonne] == tableau[ligne + 2][colonne + 2])
+						heuristique += 10;
+				}
+			}
+			return heuristique;
+		}
+	}
+}
+int Plateau::minimaxAlphabeta(int profondeur, int alpha, int beta, bool noeudMin) {
+	if (this->jeuFini() || profondeur <= 0) {
+		return this->heuristique() * (profondeur + 1);
+	}
+	else {
+		if (noeudMin) {
+			int valeur = 100000000;
+			for (auto coupPossible : this->tourPossible()) {
+				valeur = std::min(valeur, this->enfant(coupPossible.second).minimaxAlphabeta(profondeur - 1, alpha, beta, false));
+				beta = std::min(beta, valeur);
+				if (alpha >= valeur) {
+					break;
+				}
+			}
+			return valeur;
+		}
+		else {
+			int valeur = -100000000;
+			for (auto coupPossible : this->tourPossible()) {
+				valeur = std::max(valeur, this->enfant(coupPossible.second).minimaxAlphabeta(profondeur - 1, alpha, beta, true));
+				alpha = std::max(alpha, valeur);
+				if (valeur >= beta) {
+					break;
+				}
+			}
+			return valeur;
+		}
+	}
+}
+
+/*int Plateau::minimax(int profondeur, bool maxPlayer) {
+	if (profondeur == 0 || this->jeuFini() == 1) {
+		//this->afficheJeu();
+		return this->heuristique();
+	}
+	if (maxPlayer) {
+		int valeur = -1000;
+		for (auto coupPossible : this->tourPossible()) {
+			valeur = std::max(valeur, this->enfant(coupPossible.second).minimax(profondeur - 1, !maxPlayer));
+		}
+		return valeur;
+	}
+	else {
+		int valeur = 1000;
+		for (auto coupPossible : this->tourPossible()) {
+			valeur = std::min(valeur, this->enfant(coupPossible.second).minimax(profondeur - 1, !maxPlayer));
+		}
+		return valeur;
+	}
+	
+}*/
+Plateau Plateau::enfant(cases* modif) {
+	this->jouer(modif);
+	Plateau plateauEnfant = *this;
+	plateauEnfant.joueurActuel = !plateauEnfant.joueurActuel;
+	*modif = Vide;
+	return plateauEnfant;
+
+}
+void Plateau::tourOrdi() {
+	this->afficheJeu();
+	std::cout << "\nORDI joue... \n";
+	std::vector<cases*> meilleursTours;
+	std::vector<int> valeurs;
+	int valeurMax = -1000;
+
+	for (auto tourEnfant : this->tourPossible()) {
+
+		int valeurEnfant = this->enfant(tourEnfant.second).minimaxAlphabeta(5, -10000,10000,true);
+		if (valeurEnfant) {
+			//std::cout << valeurEnfant << "\n";
+		}
+		if (valeurEnfant > valeurMax) {
+			meilleursTours.clear();
+			valeurMax = valeurEnfant;
+			meilleursTours.push_back(tourEnfant.second);
+		}
+		else if (valeurEnfant == valeurMax) {
+			meilleursTours.push_back(tourEnfant.second);
+		}
+	}
+	//std::cout << meilleursTours.size() << "\n";
+	if (meilleursTours.size() == 1) {
+		this->jouer(meilleursTours[0]);
+		this->afficheJeu();
+		this->afficheJoueurs();
+		joueurActuel = !joueurActuel;
+	}
+	else {
+		this->jouer(meilleursTours[meilleursTours.size()/2]);
+		this->afficheJeu();
+		this->afficheJoueurs();
+		joueurActuel = !joueurActuel;
+	}
+
 }

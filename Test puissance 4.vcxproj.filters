@@ -33,6 +33,9 @@
     <ClCompile Include="testconnect4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="testconnect4minmax.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Plateau.h">
