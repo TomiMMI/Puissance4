@@ -24,6 +24,7 @@
     <ProjectGuid>{e6a797f0-b381-43b6-a738-1c69b58cbea1}</ProjectGuid>
     <RootNamespace>Testpuissance4</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Puissance 4</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -113,7 +114,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -133,22 +134,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FonctionsEtValeursPourOpenGL.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Plateau.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="maincmd.cpp" />
+    <ClCompile Include="PlateauGraphique.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="testconnect4.cpp" />
     <ClCompile Include="testconnect4minmax.cpp" />
+    <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FonctionsEtValeursPourOpenGL.h" />
     <ClInclude Include="Plateau.h" />
+    <ClInclude Include="PlateauGraphique.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="fragmentBoutons.fs" />
     <None Include="fragmentJetons.fs" />
     <None Include="fragmentPlateau.fs" />
+    <None Include="fragmentTexte.fs" />
+    <None Include="vertexBoutons.vs" />
     <None Include="vertexJetons.vs" />
     <None Include="vertexPlateau.vs" />
+    <None Include="vertexTexte.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

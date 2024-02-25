@@ -16,12 +16,18 @@
     <Filter Include="Header Files\ShaderFiles">
       <UniqueIdentifier>{399f7da0-d972-4cde-b29d-10133141ea33}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ShaderFiles\Fragment Shaders">
+      <UniqueIdentifier>{05dc779b-0bce-42de-a7d9-06241a8c61e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ShaderFiles\Vertex Shaders">
+      <UniqueIdentifier>{21a29f2f-8e78-40cc-b163-33a1de39ce0c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Plateau.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="maincmd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp">
@@ -30,11 +36,17 @@
     <ClCompile Include="glad.c">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="testconnect4.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="testconnect4minmax.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlateauGraphique.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FonctionsEtValeursPourOpenGL.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>Resource Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -44,19 +56,40 @@
     <ClInclude Include="Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PlateauGraphique.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FonctionsEtValeursPourOpenGL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="vertexPlateau.vs">
-      <Filter>Header Files\ShaderFiles</Filter>
+    <None Include="fragmentJetons.fs">
+      <Filter>Header Files\ShaderFiles\Fragment Shaders</Filter>
     </None>
     <None Include="fragmentPlateau.fs">
-      <Filter>Header Files\ShaderFiles</Filter>
+      <Filter>Header Files\ShaderFiles\Fragment Shaders</Filter>
     </None>
-    <None Include="fragmentJetons.fs">
-      <Filter>Header Files\ShaderFiles</Filter>
+    <None Include="fragmentTexte.fs">
+      <Filter>Header Files\ShaderFiles\Fragment Shaders</Filter>
+    </None>
+    <None Include="fragmentBoutons.fs">
+      <Filter>Header Files\ShaderFiles\Fragment Shaders</Filter>
     </None>
     <None Include="vertexJetons.vs">
-      <Filter>Header Files\ShaderFiles</Filter>
+      <Filter>Header Files\ShaderFiles\Vertex Shaders</Filter>
+    </None>
+    <None Include="vertexPlateau.vs">
+      <Filter>Header Files\ShaderFiles\Vertex Shaders</Filter>
+    </None>
+    <None Include="vertexTexte.vs">
+      <Filter>Header Files\ShaderFiles\Vertex Shaders</Filter>
+    </None>
+    <None Include="vertexBoutons.vs">
+      <Filter>Header Files\ShaderFiles\Vertex Shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

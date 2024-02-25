@@ -5,19 +5,13 @@
 #include <cstdlib>
 #include <sstream>
 
-Plateau::Plateau(std::string J1, std::string J2) {
+Plateau::Plateau() {
 	tableau = std::vector<std::vector<cases>>(6, std::vector<cases>(7, Vide));
 
-	//Seedage pour fonction rand() afin d'avoir un joueur aléatoire qui débutes
 	const void* adressePourSeed = static_cast<const void*>(this);
 	std::stringstream seed;
 	seed << adressePourSeed;
 	srand(atoi(seed.str().c_str()));
-	int indextab = rand() % 2;
-
-
-	joueurs[indextab] = J1;
-	joueurs[!indextab] = J2;
 }
 void Plateau::afficheJeu() const{
 	for (std::vector<cases> line : tableau) {
@@ -60,7 +54,7 @@ Plateau::cases* Plateau::celPossible(int colonne) {
 		}
 	} return nullptr;
 }
-int Plateau::jeuFini() {
+int Plateau::jeuFini(){
 	if (tourPossible().size() == 0) {
 		return 2;
 	}
@@ -117,13 +111,13 @@ bool Plateau::tour(int col) {
 		return false;
 	}
 }
-std::string Plateau::getJoueur(int index) {
+std::string Plateau::getJoueur(int index) const {
 	return joueurs[index];
 }
-void Plateau::afficheJoueurs() {
-	std::cout  << joueurs[0] << " : O\n" << joueurs[1] << " : X\n\n";
+void Plateau::afficheJoueurs() const {
+	std::cout  << joueurs[!joueurActuel] << " : O\n" << joueurs[joueurActuel] << " : X\n\n";
 }
-bool Plateau::getActive() {
+bool Plateau::getActive() const {
 	return active;
 }
 void Plateau::toggleActive() {
@@ -240,27 +234,6 @@ int Plateau::minimaxAlphabeta(int profondeur, int alpha, int beta, bool noeudMin
 	}
 }
 
-/*int Plateau::minimax(int profondeur, bool maxPlayer) {
-	if (profondeur == 0 || this->jeuFini() == 1) {
-		//this->afficheJeu();
-		return this->heuristique();
-	}
-	if (maxPlayer) {
-		int valeur = -1000;
-		for (auto coupPossible : this->tourPossible()) {
-			valeur = std::max(valeur, this->enfant(coupPossible.second).minimax(profondeur - 1, !maxPlayer));
-		}
-		return valeur;
-	}
-	else {
-		int valeur = 1000;
-		for (auto coupPossible : this->tourPossible()) {
-			valeur = std::min(valeur, this->enfant(coupPossible.second).minimax(profondeur - 1, !maxPlayer));
-		}
-		return valeur;
-	}
-	
-}*/
 Plateau Plateau::enfant(cases* modif) {
 	this->jouer(modif);
 	Plateau plateauEnfant = *this;
@@ -274,14 +247,11 @@ void Plateau::tourOrdi() {
 	std::cout << "\nORDI joue... \n";
 	std::vector<cases*> meilleursTours;
 	std::vector<int> valeurs;
-	int valeurMax = -1000;
+	int valeurMax = -100000000;
 
 	for (auto tourEnfant : this->tourPossible()) {
 
 		int valeurEnfant = this->enfant(tourEnfant.second).minimaxAlphabeta(5, -10000,10000,true);
-		if (valeurEnfant) {
-			//std::cout << valeurEnfant << "\n";
-		}
 		if (valeurEnfant > valeurMax) {
 			meilleursTours.clear();
 			valeurMax = valeurEnfant;
@@ -291,7 +261,6 @@ void Plateau::tourOrdi() {
 			meilleursTours.push_back(tourEnfant.second);
 		}
 	}
-	//std::cout << meilleursTours.size() << "\n";
 	if (meilleursTours.size() == 1) {
 		this->jouer(meilleursTours[0]);
 		this->afficheJeu();
@@ -305,4 +274,24 @@ void Plateau::tourOrdi() {
 		joueurActuel = !joueurActuel;
 	}
 
+}
+int Plateau::getMode() const {
+	return mode;
+}
+void Plateau::setMode(int i) {
+	mode = i;
+
+}
+void Plateau::setJoueurs(std::string J1, std::string J2) {
+	int indextab = rand() % 2;
+
+
+	joueurs[indextab] = J1;
+	joueurs[!indextab] = J2;
+}
+void Plateau::setIsTourOrdi(bool val) {
+	isTourOrdi = val;
+}
+bool Plateau::getIsTourOrdi() const {
+	return isTourOrdi;
 }

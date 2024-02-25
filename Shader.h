@@ -1,8 +1,8 @@
 #pragma once
-#ifndef SHADER_H    // Évite d'inclure plusieurs fois ce fichier
+#ifndef SHADER_H    
 #define SHADER_H
 
-#include <glad/glad.h> // inclure glad pour disposer de tout en-tête OpenGL 
+#include <glad/glad.h> 
 
 #include <string>
 #include <fstream>
@@ -15,14 +15,10 @@
 class Shader
 {
 public:
-    // the program ID
     unsigned int ID;
 
-    // le constructeur lit et construit le shader
     Shader(const GLchar* vertexPath, const GLchar* fragmentPath);
-    // Activation du shader
     void use();
-    // fonctions utiles pour l'uniform
     void setBool(const std::string& name, bool value) const;
     void setInt(const std::string& name, int value) const;
     void setFloat(const std::string& name, float value) const;

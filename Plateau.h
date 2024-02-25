@@ -10,20 +10,28 @@ public:
 	std::vector<std::vector<cases>> tableau;
 	 int joueurActuel = 0;
 
-	Plateau(std::string,std::string);
+	Plateau();
 	void afficheJeu() const;
-	void afficheJoueurs();
+	void afficheJoueurs() const;
+
 	bool tour(int);
-	int jeuFini();
+	void tourOrdi();
+
 	int minimaxAlphabeta(int profondeur, int alpha, int beta, bool noeudMin);
 
-	std::string getJoueur(int);
-	bool getActive();
-	void toggleActive();
-	void tourOrdi();
-	//int minimax(int profondeur, bool maxPlayer);
+	int getMode() const;
+	std::string getJoueur(int) const;
+	bool getActive() const;
+	bool getIsTourOrdi() const;
+	int jeuFini();
 
-private:
+	void toggleActive();
+	void setIsTourOrdi(bool);
+	void setMode(int);
+	void setJoueurs(std::string, std::string);
+protected:
+	bool isTourOrdi = false;
+	int mode = 0;
 	std::string joueurs[2];
 	bool active = true;
 	std::map<int, cases*> tourPossible();

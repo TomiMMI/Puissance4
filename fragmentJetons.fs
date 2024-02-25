@@ -8,7 +8,7 @@ uniform int couleur;
 void main(){
 	switch(couleur){
 		case(0):
-		FragColor = vec4(1.,1.,1.,1.);
+		FragColor = vec4(0.8, 0.8, 0.8, 1.);
 		break;
 		case(1):
 		FragColor = vec4(1.,1.,0.,1.);
